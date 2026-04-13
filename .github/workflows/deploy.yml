@@ -59,6 +59,8 @@ jobs:
 
             # Install only production deps (lightweight)
             npm install --omit=dev
+            npm install dotenv
+
 
             # Restart app
             pm2 startOrReload ecosystem.config.cjs --env production
