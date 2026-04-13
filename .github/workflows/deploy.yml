@@ -42,14 +42,18 @@ jobs:
       - name: Upload build to server
         run: |
           rsync -avz --delete \
-            -e "ssh -p $SSH_PORT" \
+            -e "ssh -p ${SSH_PORT:-22}" \
             dist package.json ecosystem.config.cjs \
             $SSH_USER@$SSH_HOST:/var/www/html/privateinhomecare/
+        env:
+          SSH_USER: ${{ secrets.SSH_USER }}
+          SSH_HOST: ${{ secrets.SSH_HOST }}
+          SSH_PORT: ${{ secrets.SSH_PORT }}
 
       # 8. Install prod deps + reload PM2
       - name: Restart app
         run: |
-          ssh -p $SSH_PORT $SSH_USER@$SSH_HOST << 'EOF'
+          ssh -p ${SSH_PORT:-22} $SSH_USER@$SSH_HOST << 'EOF'
             set -e
             cd /var/www/html/privateinhomecare
 
